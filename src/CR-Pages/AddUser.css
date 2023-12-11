@@ -1,0 +1,33 @@
+.createBox{
+    width: 100%;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container{
+    display: flex;
+    justify-content: center;
+    height: 15vw;
+    width: 30%;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #2c87f6;
+}
+.input{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    height: 10vw;
+    width: 80%;
+}
+.header{
+    font-size: 20px;
+    color: #2c87f6;
+    font-weight: bold;
+}
+.register{
+}
