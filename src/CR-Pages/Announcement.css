@@ -1,0 +1,71 @@
+.cont{
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.ann-cont{
+    display: flex;
+    justify-content: center;
+    width: 35vw;
+    flex-direction: column;
+    align-items: center;
+}
+.textarea{
+    margin-top: 10px;
+    width: 100%;
+}
+.ann-head{
+    margin-top: 80px;
+}
+.all-ann{
+    margin-top: 20px;
+}
+.post{
+    width: 35vw;
+    min-height: 5vw;
+    border: .5px solid #bbbbbb;
+    border-radius: 3px;
+}
+.top{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    border-bottom: .3px solid #bbbbbb;
+}
+.post-info{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-left: 10px;
+    padding: 5px;
+}
+.name{
+    font-size: 14px;
+    font-weight: bold;
+}
+.date{
+    font-size: 12px;
+    font-weight: lighter;
+}
+.icons{
+    margin-right: 10px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+}
+.text{
+    font-size: 14px;
+    padding: 10px;
+    text-align: left;
+}
+.edit{
+    margin-right: 5px;
+}
+.edit :hover, .delete :hover{
+    cursor: pointer;
+}

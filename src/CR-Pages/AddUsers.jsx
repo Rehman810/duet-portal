@@ -22,6 +22,11 @@ const AddUsers = () => {
   const [rollNum, setRollNum] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [selectedOption, setSelectedOption] = useState("student");
+
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
 
   const handleSave = async () => {
     setProgress(30); // Show loading bar with 30% progress
@@ -29,15 +34,26 @@ const AddUsers = () => {
       .then((e) => {
         onAuthStateChanged(auth, async (user) => {
           if (user) {
-            console.log("user found", e.user.uid);
             try {
-              const userDocRef = doc(db, "student-info", e.user.uid);
-              await setDoc(userDocRef, {
-                UserName: name,
-                RollNo: rollNum,
-                email: email,
-                DateofRegister: serverTimestamp(),
-              });
+              if (selectedOption === "student") {
+                const userDocRef = doc(db, "student-info", e.user.uid);
+                await setDoc(userDocRef, {
+                  UserName: name,
+                  RollNo: rollNum,
+                  email: email,
+                  role: "student",
+                  DateofRegister: serverTimestamp(),
+                });
+              } else if (selectedOption === "cr") {
+                const userDocRef = doc(db, "CR-info", e.user.uid);
+                await setDoc(userDocRef, {
+                  UserName: name,
+                  RollNo: rollNum,
+                  email: email,
+                  role: "cr",
+                  DateofRegister: serverTimestamp(),
+                });
+              }
             } catch (e) {
               console.error("Error adding document: ", e);
             }
@@ -82,27 +98,41 @@ const AddUsers = () => {
           </div>
           <div className="input">
             <Input
-              type="text"
+              className="inp"
               placeholder="Enter UserName"
               onChange={(e) => setName(e.target.value)}
             />
             <Input
-              type="text"
+              className="inp"
               placeholder="Enter Roll Number"
               onChange={(e) => setRollNum(e.target.value)}
             />
             <Input
+              className="inp"
               placeholder="Enter Email address"
               type="email"
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Input
+            <Input.Password
+              className="inp"
               placeholder="Enter Password"
-              type="password"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div>
+          <div className="div-opt">
+            <div className="option">
+              <label className="label">Want to add? &nbsp;</label>
+              <select
+                className="select"
+                value={selectedOption}
+                onChange={handleSelectChange}
+              >
+                <option value="student">Student</option>
+                <option value="cr">Class Representative</option>
+              </select>
+            </div>
+          </div>
+          <div className="div-reg">
             <Button type="primary" className="register" onClick={handleSave}>
               Register
             </Button>
