@@ -1,24 +1,24 @@
 import React, { useState } from "react";
 import { Input } from "antd";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { auth } from "../Firebase";
+import { auth, db } from "../Firebase";
 import { useNavigate } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 import Swal from "sweetalert2";
 import Logo from "../assets/duet.png";
+import "./Login.css";
+import { Button } from "antd";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const Login = () => {
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [selectedOption, setSelectedOption] = useState("student");
 
-  // Navigate to the signup page with a loading bar animation
-  const navigateToSignup = () => {
-    setProgress(100);
-    setTimeout(() => {
-      navigate("/signup");
-    }, 500);
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
   };
 
   // Handle the login process with authentication
@@ -31,28 +31,79 @@ const Login = () => {
         email,
         password
       );
-
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          if (email == "admin@gmail.com") {
-            console.log("User found:", user.uid);
-            localStorage.setItem("uid", user.uid);
-            setProgress(100);
-            setTimeout(() => {
-              navigate("/");
-            }, 500);
-          } else {
-            setProgress(100);
-            setTimeout(() => {
-              navigate("/student");
-            }, 500);
+          const uid = user.uid;
+          if (selectedOption == "cr") {
+            const userDocRef = doc(db, "CR-info", uid);
+            const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                localStorage.setItem("role", data.role);
+                localStorage.setItem("name", data.UserName);
+                if (data.role === "cr") {
+                  console.log("User found:", data);
+                  localStorage.setItem("uid", user.uid);
+                  setProgress(100);
+                  setTimeout(() => {
+                    navigate("/");
+                  }, 200);
+                } else {
+                  setProgress(100);
+                  Swal.fire({
+                    icon: "error",
+                    title: "Try Again",
+                    text: "Something went wrong!",
+                  });
+                }
+              } else {
+                setProgress(100);
+                Swal.fire({
+                  icon: "error",
+                  title: "Try Again",
+                  text: "You are not a Class Representative!",
+                });
+              }
+            });
+          } else if (selectedOption == "student") {
+            const userDocRef = doc(db, "student-info", uid);
+            const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                if (data.role === "student") {
+                  console.log("User found:", user.uid);
+                  localStorage.setItem("uid", user.uid);
+                  localStorage.setItem("role", user.role);
+                  localStorage.setItem("name", user.UserName);
+                  setProgress(100);
+                  setTimeout(() => {
+                    navigate("/student");
+                  }, 500);
+                } else {
+                  setProgress(100);
+                  Swal.fire({
+                    icon: "error",
+                    title: "Try Again",
+                    text: "Something went wrong!",
+                  });
+                }
+              } else {
+                setProgress(100);
+                Swal.fire({
+                  icon: "error",
+                  title: "Try Again",
+                  text: "You are not a Student!",
+                });
+              }
+            });
           }
         } else {
           console.log("User not found");
+          setProgress(100);
         }
       });
     } catch (error) {
-      // Display a SweetAlert for login failure
+      setProgress(100);
       Swal.fire({
         icon: "error",
         title: "Try Again",
@@ -69,35 +120,42 @@ const Login = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <img src={Logo} alt="duet" className="facebook" />
+      <div className="logo-con">
+        <img src={Logo} alt="duet" className="logo" />
+        <span className="logo-text">
+          DAWOOD UNIVERSITY OF ENGINEERING AND TECHNOLOGY
+        </span>
+      </div>
       <div className="login-box">
-        <span style={{ fontSize: 20 }}>Log in</span>
+        <span className="head">Log in</span>
         <div style={{ marginTop: 20 }}>
           <Input
-            placeholder="Email address or phone number"
+            placeholder="Enetr email address"
             onChange={(e) => setEmail(e.target.value)}
           />
           <Input.Password
-            placeholder="Password"
+            placeholder="Enter password"
             style={{ marginTop: 10 }}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <span className="login-btn" onClick={handleLogin}>
-          Log in
-        </span>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-            justifyContent: "space-evenly",
-          }}
-        >
-          <span className="login-bottom-btn">Forgotten account?</span>
-          <span className="login-bottom-btn" onClick={navigateToSignup}>
-            Sign up
-          </span>
+        <div className="div-opt">
+          <div className="option">
+            <label className="label">Are you a? &nbsp;</label>
+            <select
+              className="select"
+              value={selectedOption}
+              onChange={handleSelectChange}
+            >
+              <option value="student">Student</option>
+              <option value="cr">Class Representative</option>
+            </select>
+          </div>
+        </div>
+        <div className="div-reg">
+          <Button type="primary" className="register" onClick={handleLogin}>
+            Log in
+          </Button>
         </div>
       </div>
     </div>

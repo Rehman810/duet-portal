@@ -54,6 +54,13 @@ const AddUsers = () => {
                   DateofRegister: serverTimestamp(),
                 });
               }
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "User created successfully.",
+                showConfirmButton: false,
+                timer: 1500,
+              });
             } catch (e) {
               console.error("Error adding document: ", e);
             }
@@ -70,7 +77,7 @@ const AddUsers = () => {
         Swal.fire({
           icon: "error",
           title: "Try Again",
-          text: "Wrong email or password!",
+          text: "Something went wrong!",
         });
         console.log(error);
       });

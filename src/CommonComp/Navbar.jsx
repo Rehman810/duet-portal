@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Dropdown } from "antd";
+import { signOut } from "firebase/auth";
+import { auth } from "../Firebase";
+
 function NavbarFunc(props) {
   const navigate = useNavigate();
   const { attendance, announcement, material, users, classes, home } = props;
@@ -45,21 +48,33 @@ function NavbarFunc(props) {
       navigate(`/`);
     }, 500);
   };
+  const signOutFunc = async () => {
+    await signOut(auth)
+      .then(() => {
+        localStorage.removeItem("uid");
+        localStorage.removeItem("role");
+        localStorage.removeItem("name");
+        setProgress(100);
+        setTimeout(() => {
+          navigate(`/login`);
+        }, 500);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const items = [
     {
       label: <span onClick={homeFunc}>Home</span>,
       key: "0",
     },
-    // {
-    //   type: "divider",
-    // },
     {
       label: <span onClick={announcementFunc}>Announcements</span>,
       key: "1",
     },
 
     {
-      label: <span onClick={materialFunc}>Study Materials</span>,
+      label: <span onClick={materialFunc}>Materials</span>,
       key: "2",
     },
     {
@@ -73,6 +88,17 @@ function NavbarFunc(props) {
     {
       label: <span onClick={attendanceFunc}>Attendance</span>,
       key: "5",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: (
+        <span onClick={signOutFunc} style={{ color: "red" }}>
+          SignOut
+        </span>
+      ),
+      key: "6",
     },
   ];
   return (
@@ -104,13 +130,16 @@ function NavbarFunc(props) {
             Announcements
           </span>
           <span onClick={materialFunc} className="text">
-            Study Materials
+            Materials
           </span>
           <span onClick={userFunc} className="text">
             User
           </span>
           <span onClick={classesFunc} className="text">
             Classes
+          </span>
+          <span onClick={signOutFunc} className="text signout">
+            SignOut
           </span>
         </div>
         <div className="ham">
