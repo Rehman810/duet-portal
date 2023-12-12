@@ -60,7 +60,7 @@ const Login = () => {
                 setProgress(100);
                 Swal.fire({
                   icon: "error",
-                  title: "Try Again",
+                  title: "Access Denied",
                   text: "You are not a Class Representative!",
                 });
               }
@@ -91,7 +91,7 @@ const Login = () => {
                 setProgress(100);
                 Swal.fire({
                   icon: "error",
-                  title: "Try Again",
+                  title: "Access Denied",
                   text: "You are not a Student!",
                 });
               }

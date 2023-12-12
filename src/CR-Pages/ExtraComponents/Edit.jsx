@@ -22,13 +22,7 @@ function Edit(props) {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    const currentUserId = localStorage.getItem("uid");
-    const userPostsCollectionRef = collection(
-      db,
-      "CR-info",
-      currentUserId,
-      "announcements"
-    );
+    const userPostsCollectionRef = collection(db, "announcement");
     const docRef = doc(userPostsCollectionRef, id);
     try {
       await updateDoc(docRef, {

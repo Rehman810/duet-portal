@@ -65,9 +65,7 @@ const AddUsers = () => {
               console.error("Error adding document: ", e);
             }
             setProgress(100); // Show loading bar with 100% progress
-            setTimeout(() => {
-              navigate("/user");
-            }, 500);
+            setTimeout(() => {}, 100);
           } else {
             console.log("user not found", user.uid);
           }
