@@ -15,6 +15,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { Spin } from "antd";
+import { MdOutlineDelete } from "react-icons/md";
 
 const Materials = () => {
   const [progress, setProgress] = useState(0);
@@ -33,7 +34,8 @@ const Materials = () => {
         title: "Invalid Link",
         text: "Please enter a valid url.",
       });
-      setProgress(100);
+      setProgress(100); // Show loading bar with 100% progress
+      setTimeout(() => {}, 200);
       return;
     }
 
@@ -61,8 +63,6 @@ const Materials = () => {
         });
         console.error(e);
       }
-      setLink("");
-      setSem("");
     } else {
       Swal.fire({
         icon: "error",
@@ -71,7 +71,11 @@ const Materials = () => {
       });
     }
 
-    setProgress(0);
+    setProgress(100); // Show loading bar with 100% progress
+    setTimeout(() => {
+      setLink("");
+      setSem("");
+    }, 200);
   };
 
   useEffect(() => {
@@ -107,7 +111,36 @@ const Materials = () => {
 
     fetchMaterial();
   }, []);
-
+  const handleDeleteField = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This material will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const userPostsCollectionRef = collection(db, "study-material");
+          const docRef = doc(userPostsCollectionRef, id); // Reference to the specific document
+          await deleteDoc(docRef);
+          Swal.fire("Deleted!", "This material has been deleted.", "success");
+          setUserPosts((prevPosts) =>
+            prevPosts.filter((post) => post.id !== id)
+          );
+        } catch (error) {
+          console.error("Error deleting document:", error);
+          Swal.fire(
+            "Error",
+            "An error occurred while deleting the document.",
+            "error"
+          );
+        }
+      }
+    });
+  };
   return (
     <>
       <LoadingBar
@@ -131,7 +164,9 @@ const Materials = () => {
           <div className="input">
             <p style={{ fontSize: "14px" }}>
               <b>NOTE:</b> Save all your documents and study material in any
-              drive i.e. Google or One Drive, and paste it's link here.
+              drive i.e. Google or One Drive, and paste it's link here. Before
+              giving a URL, first go to your drive, then your file, then give
+              access to everyone.
             </p>
             <Input
               required
@@ -159,17 +194,49 @@ const Materials = () => {
       </div>
       <div>
         {loading ? (
-          <Spin className="spin" />
+          <Spin
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "30px",
+            }}
+          />
         ) : userPosts.length > 0 ? (
           userPosts.map((a) => (
-            <div key={a.id}>
-              <a href={`${a.link}`}>
+            <div
+              key={a.id}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: "30px",
+                flexDirection: "row",
+              }}
+            >
+              <a href={`${a.link}`} target="_blank">
                 <span>{a.sem}</span>
               </a>
+              <div className="delete">
+                <MdOutlineDelete
+                  style={{ marginLeft: "20px" }}
+                  size={20}
+                  color="blue"
+                  onClick={() => {
+                    handleDeleteField(a.id);
+                  }}
+                />
+              </div>
             </div>
           ))
         ) : (
-          <div className="no-data-message">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <p>No study material available.</p>
           </div>
         )}

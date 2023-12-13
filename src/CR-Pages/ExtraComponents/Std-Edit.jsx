@@ -8,30 +8,32 @@ import { CiEdit } from "react-icons/ci";
 import { Input } from "antd";
 
 const { TextArea } = Input;
-function StEdit(props) {
+function Edit(props) {
   const [id, setId] = useState("");
-  const [text, setText] = useState();
-
+  const [name, setName] = useState("");
+  const [rollNum, setRollNum] = useState("");
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleEdit = () => {
     setShow(true);
+    setName(props.name);
+    setRollNum(props.rollNo);
     setId(props.id);
-    setText(props.text);
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
-    const userPostsCollectionRef = collection(db, "announcement");
+    const userPostsCollectionRef = collection(db, "student-info");
     const docRef = doc(userPostsCollectionRef, id);
     try {
       await updateDoc(docRef, {
-        text: text,
+        UserName: name,
+        RollNo: rollNum,
       });
       onSnapshot(docRef, (doc) => {
         props.onUpdate((prevPosts) => {
           const updatedPosts = prevPosts.map((post) =>
-            post.id === id ? { ...post, text: text } : post
+            post.id === id ? { ...post, UserName: name, RollNo: rollNum } : post
           );
           return updatedPosts;
         });
@@ -56,18 +58,18 @@ function StEdit(props) {
               controlId="exampleForm.ControlInput1"
             ></Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Announcement</Form.Label>
-
-              <TextArea
-                className="textarea"
-                value={text}
-                autoFocus
-                placeholder="Edit your announcement here."
-                onChange={(e) => setText(e.target.value)}
-                autoSize={{
-                  minRows: 3,
-                  maxRows: 5,
-                }}
+              <Form.Label>Students Data</Form.Label>
+              <Input
+                value={name}
+                className="inp"
+                placeholder="Edit UserName"
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Input
+                value={rollNum}
+                className="inp"
+                placeholder="Edit Roll Number"
+                onChange={(e) => setRollNum(e.target.value)}
               />
             </Form.Group>
           </Form>
@@ -85,4 +87,4 @@ function StEdit(props) {
   );
 }
 
-export default StEdit;
+export default Edit;
