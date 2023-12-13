@@ -9,7 +9,6 @@ import AttendanceStd from "./Student-Pages/Attendance";
 import Announcement from "./CR-Pages/Announcement";
 import AnnouncementStd from "./Student-Pages/Announcement";
 import AddUsers from "./CR-Pages/AddUsers";
-import Classes from "./CR-Pages/Classes";
 import Materials from "./CR-Pages/materials";
 import Protected from "./Protected";
 
@@ -33,7 +32,6 @@ const Main = () => {
             path="/material"
             element={<Protected Component={Materials} />}
           />
-          <Route path="/classes" element={<Protected Component={Classes} />} />
           <Route path="/user" element={<Protected Component={AddUsers} />} />
           <Route
             path="/student-attendance"

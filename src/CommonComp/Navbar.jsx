@@ -10,7 +10,7 @@ import { auth } from "../Firebase";
 
 function NavbarFunc(props) {
   const navigate = useNavigate();
-  const { attendance, announcement, material, users, classes, home } = props;
+  const { attendance, announcement, material, users } = props;
   const [progress, setProgress] = useState(0);
   const attendanceFunc = () => {
     setProgress(100);
@@ -34,12 +34,6 @@ function NavbarFunc(props) {
     setProgress(100);
     setTimeout(() => {
       navigate(`/${users}`);
-    }, 500);
-  };
-  const classesFunc = () => {
-    setProgress(100);
-    setTimeout(() => {
-      navigate(`/${classes}`);
     }, 500);
   };
   const homeFunc = () => {
@@ -82,12 +76,8 @@ function NavbarFunc(props) {
       key: "3",
     },
     {
-      label: <span onClick={classesFunc}>Classes</span>,
-      key: "4",
-    },
-    {
       label: <span onClick={attendanceFunc}>Attendance</span>,
-      key: "5",
+      key: "4",
     },
     {
       type: "divider",
@@ -98,7 +88,7 @@ function NavbarFunc(props) {
           SignOut
         </span>
       ),
-      key: "6",
+      key: "5",
     },
   ];
   return (
@@ -134,9 +124,6 @@ function NavbarFunc(props) {
           </span>
           <span onClick={userFunc} className="text">
             User
-          </span>
-          <span onClick={classesFunc} className="text">
-            Classes
           </span>
           <span onClick={signOutFunc} className="text signout">
             SignOut

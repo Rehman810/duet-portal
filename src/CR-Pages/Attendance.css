@@ -1,0 +1,75 @@
+.att-main{
+    width: 100%;
+    margin: 0;
+}
+.att-cont{
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.att-head{
+    margin-top: 70px;
+    font-size: 2.5vw;
+    color: #2c87f6;
+    font-weight: bold;
+}
+.date-head{
+    font-size: 18px;
+    font-weight: bold;
+    border: .5px solid black;
+    border-radius: 5px;
+    padding: 5px;
+}
+.att-date{
+    margin-top: 10px;
+}
+.table{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+.table-tr{
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: .1px solid #919090;
+}
+.mark-att{
+    width: 60%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 1100px) {
+    .table-tr{
+        width: 70%;
+    }
+    .att-head{
+        font-size: 3vw;
+    }
+    .date-head{
+        font-size: 16px;
+    }
+    .mark-att{
+        width: 70%;
+    }
+}
+@media (max-width: 768px) {
+    .table-tr{
+        width: 80%;
+        margin-bottom: 10px;
+    }
+    .mark-att{
+        width: 80%;
+    }
+    .att-head{
+        font-size: 4.5vw;
+    }
+}

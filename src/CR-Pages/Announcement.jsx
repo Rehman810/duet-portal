@@ -4,7 +4,7 @@ import { Input } from "antd";
 import "./Announcement.css";
 import { Button } from "antd";
 import { MdOutlineDelete } from "react-icons/md";
-import { db, auth } from "../Firebase";
+import { db } from "../Firebase";
 import {
   serverTimestamp,
   collection,
@@ -12,8 +12,6 @@ import {
   query,
   orderBy,
   onSnapshot,
-  getDocs,
-  setDoc,
   doc,
   deleteDoc,
 } from "firebase/firestore";
@@ -53,71 +51,6 @@ const Announcement = () => {
   const year = now.getFullYear();
 
   const date = `${month} ${day}, ${year}`;
-
-  // const Ann = async () => {
-  //   if (text.trim() !== "") {
-  //     try {
-  //       const currentUserId = auth.currentUser.uid;
-  //       const userPostsCollectionRef = collection(
-  //         db,
-  //         "CR-info",
-  //         currentUserId,
-  //         "announcements"
-  //       );
-  //       const newPostRef = await addDoc(userPostsCollectionRef, {
-  //         text: text,
-  //         date: date,
-  //         Name: localStorage.getItem("name"),
-  //         timestamp: serverTimestamp(),
-  //       });
-  //       Swal.fire({
-  //         position: "top-end",
-  //         icon: "success",
-  //         title: "Announcement is added.",
-  //         showConfirmButton: false,
-  //         timer: 1500,
-  //       });
-  //     } catch (e) {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Try Again",
-  //         text: "Something went wrong!!",
-  //       });
-  //       console.log(e);
-  //     }
-  //     setText("");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const currentUserId = localStorage.getItem("uid");
-  //   const userPostsCollectionRef = collection(
-  //     db,
-  //     "CR-info",
-  //     currentUserId,
-  //     "announcements"
-  //   );
-  //   const queryForPosts = query(
-  //     userPostsCollectionRef,
-  //     orderBy("timestamp", "desc")
-  //   );
-
-  //   const unsubscribe = onSnapshot(queryForPosts, (querySnapshot) => {
-  //     const posts = [];
-  //     querySnapshot.forEach((doc) => {
-  //       posts.push({
-  //         id: doc.id,
-  //         ...doc.data(),
-  //       });
-  //     });
-  //     setUserPosts(posts);
-  //     setLoading(false);
-  //   });
-
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, []);
 
   const Ann = async () => {
     if (text.trim() !== "") {
@@ -219,7 +152,6 @@ const Announcement = () => {
       <Navbar
         attendance={"attendance"}
         announcement={"announcement"}
-        classes={"classes"}
         users={"user"}
         material={"material"}
         home={"/"}

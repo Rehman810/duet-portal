@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { serverTimestamp } from "firebase/firestore";
-import { Input } from "antd";
+import { Input, Button } from "antd";
 import LoadingBar from "react-top-loading-bar";
 import "./AddUser.css";
 import {
@@ -13,15 +13,13 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../Firebase";
 import { setDoc, doc } from "firebase/firestore";
-import { Button } from "antd";
 
 const AddUsers = () => {
-  let navigate = useNavigate();
   const [progress, setProgress] = useState(0);
-  const [name, setName] = useState();
-  const [rollNum, setRollNum] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [name, setName] = useState("");
+  const [rollNum, setRollNum] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [selectedOption, setSelectedOption] = useState("student");
 
   const handleSelectChange = (e) => {
@@ -54,6 +52,7 @@ const AddUsers = () => {
                   DateofRegister: serverTimestamp(),
                 });
               }
+
               Swal.fire({
                 position: "top-end",
                 icon: "success",
@@ -65,7 +64,11 @@ const AddUsers = () => {
               console.error("Error adding document: ", e);
             }
             setProgress(100); // Show loading bar with 100% progress
-            setTimeout(() => {}, 100);
+            setTimeout(() => {}, 200);
+            setEmail("");
+            setPassword("");
+            setName("");
+            setRollNum("");
           } else {
             console.log("user not found", user.uid);
           }
@@ -91,7 +94,6 @@ const AddUsers = () => {
       <Navbar
         attendance={"attendance"}
         announcement={"announcement"}
-        classes={"classes"}
         users={"user"}
         material={"material"}
         home={"/"}
