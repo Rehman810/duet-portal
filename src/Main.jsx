@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./CommonPages/Login";
-import SignUp from "./CommonPages/SignUp";
 import HomeStudent from "./Student-Pages/Home";
 import Home from "./CR-Pages/Home";
 import Attendance from "./CR-Pages/Attendance";
@@ -18,7 +17,6 @@ const Main = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Protected Component={Login} />} />
-          <Route path="/signup" element={<Protected Component={SignUp} />} />
           <Route path="/" element={<Protected Component={Home} />} />
           <Route
             path="/student"

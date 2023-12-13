@@ -42,7 +42,6 @@ const Login = () => {
                 localStorage.setItem("role", data.role);
                 localStorage.setItem("name", data.UserName);
                 if (data.role === "cr") {
-                  console.log("User found:", data);
                   localStorage.setItem("uid", user.uid);
                   setProgress(100);
                   setTimeout(() => {
@@ -71,7 +70,6 @@ const Login = () => {
               if (docSnapshot.exists()) {
                 const data = docSnapshot.data();
                 if (data.role === "student") {
-                  console.log("User found:", user.uid);
                   localStorage.setItem("uid", user.uid);
                   localStorage.setItem("role", user.role);
                   localStorage.setItem("name", user.UserName);
@@ -130,7 +128,7 @@ const Login = () => {
         <span className="head">Log in</span>
         <div style={{ marginTop: 20 }}>
           <Input
-            placeholder="Enetr email address"
+            placeholder="Enter email address"
             onChange={(e) => setEmail(e.target.value)}
           />
           <Input.Password

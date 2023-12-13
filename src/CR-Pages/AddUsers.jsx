@@ -1,9 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../CommonComp/Navbar";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { serverTimestamp } from "firebase/firestore";
 import { Input, Button } from "antd";
 import LoadingBar from "react-top-loading-bar";
 import "./AddUser.css";
@@ -12,7 +9,14 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth, db } from "../Firebase";
-import { setDoc, doc } from "firebase/firestore";
+import {
+  serverTimestamp,
+  collection,
+  setDoc,
+  query,
+  onSnapshot,
+  doc,
+} from "firebase/firestore";
 
 const AddUsers = () => {
   const [progress, setProgress] = useState(0);
@@ -21,67 +25,114 @@ const AddUsers = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedOption, setSelectedOption] = useState("student");
+  const [crcheck, setCrCheck] = useState("");
+  const [stdcheck, setstdCheck] = useState("");
 
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
   };
 
-  const handleSave = async () => {
-    setProgress(30); // Show loading bar with 30% progress
-    return await createUserWithEmailAndPassword(auth, email, password)
-      .then((e) => {
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            try {
-              if (selectedOption === "student") {
-                const userDocRef = doc(db, "student-info", e.user.uid);
-                await setDoc(userDocRef, {
-                  UserName: name,
-                  RollNo: rollNum,
-                  email: email,
-                  role: "student",
-                  DateofRegister: serverTimestamp(),
-                });
-              } else if (selectedOption === "cr") {
-                const userDocRef = doc(db, "CR-info", e.user.uid);
-                await setDoc(userDocRef, {
-                  UserName: name,
-                  RollNo: rollNum,
-                  email: email,
-                  role: "cr",
-                  DateofRegister: serverTimestamp(),
-                });
-              }
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const userPostsCollectionRef = collection(db, "Cr-info");
+        const queryForPosts = query(userPostsCollectionRef);
 
-              Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "User created successfully.",
-                showConfirmButton: false,
-                timer: 1500,
-              });
-            } catch (e) {
-              console.error("Error adding document: ", e);
+        const unsubscribe = onSnapshot(queryForPosts, (querySnapshot) => {
+          const posts = [];
+          querySnapshot.forEach((doc) => {
+            posts.push(doc.data().RollNo);
+          });
+          setCrCheck(posts.flat());
+        });
+
+        const userPostsCollectionRefstd = collection(db, "student-info");
+        const queryForPostsstd = query(userPostsCollectionRefstd);
+
+        const unsubscribestd = onSnapshot(queryForPostsstd, (querySnapshot) => {
+          const posts = [];
+          querySnapshot.forEach((doc) => {
+            posts.push(doc.data().RollNo);
+          });
+          setstdCheck(posts.flat());
+        });
+
+        return () => {
+          unsubscribe();
+          unsubscribestd();
+        };
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      }
+    };
+
+    check();
+  }, []);
+
+  const handleSave = async () => {
+    if (!crcheck.includes(rollNum) && !stdcheck.includes(rollNum)) {
+      setProgress(30); // Show loading bar with 30% progress
+      return await createUserWithEmailAndPassword(auth, email, password)
+        .then((e) => {
+          onAuthStateChanged(auth, async (user) => {
+            if (user) {
+              try {
+                if (selectedOption === "student") {
+                  const userDocRef = doc(db, "student-info", e.user.uid);
+                  await setDoc(userDocRef, {
+                    UserName: name,
+                    RollNo: rollNum,
+                    email: email,
+                    role: "student",
+                    DateofRegister: serverTimestamp(),
+                  });
+                } else if (selectedOption === "cr") {
+                  const userDocRef = doc(db, "CR-info", e.user.uid);
+                  await setDoc(userDocRef, {
+                    UserName: name,
+                    RollNo: rollNum,
+                    email: email,
+                    role: "cr",
+                    DateofRegister: serverTimestamp(),
+                  });
+                }
+
+                Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "User created successfully.",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              } catch (e) {
+                console.error("Error adding document: ", e);
+              }
+              setProgress(100); // Show loading bar with 100% progress
+              setTimeout(() => {}, 200);
+              setEmail("");
+              setPassword("");
+              setName("");
+              setRollNum("");
+            } else {
+              console.log("user not found");
             }
-            setProgress(100); // Show loading bar with 100% progress
-            setTimeout(() => {}, 200);
-            setEmail("");
-            setPassword("");
-            setName("");
-            setRollNum("");
-          } else {
-            console.log("user not found", user.uid);
-          }
+          });
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Try Again",
+            text: "Something went wrong!",
+          });
+          console.log(error);
         });
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Try Again",
-          text: "Something went wrong!",
-        });
-        console.log(error);
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Try Again",
+        text: "Identical Roll Number",
       });
+    }
   };
 
   return (
