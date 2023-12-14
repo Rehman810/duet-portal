@@ -10,39 +10,54 @@ import AnnouncementStd from "./Student-Pages/Announcement";
 import AddUsers from "./CR-Pages/AddUsers";
 import Materials from "./CR-Pages/materials";
 import Protected from "./Protected";
+import StdMaterials from "./Student-Pages/Materials";
+import NotFound from "./NotFound";
 
 const Main = () => {
   return (
     <div>
       <BrowserRouter>
         <Routes>
+          {/* Login Route */}
           <Route path="/login" element={<Protected Component={Login} />} />
+
+          {/* Class Representative Routes */}
           <Route path="/" element={<Protected Component={Home} />} />
-          <Route
-            path="/student"
-            element={<Protected Component={HomeStudent} />}
-          />
           <Route
             path="/attendance"
             element={<Protected Component={Attendance} />}
-          />
-          <Route
-            path="/material"
-            element={<Protected Component={Materials} />}
-          />
-          <Route path="/user" element={<Protected Component={AddUsers} />} />
-          <Route
-            path="/student-attendance"
-            element={<Protected Component={AttendanceStd} />}
           />
           <Route
             path="/announcement"
             element={<Protected Component={Announcement} />}
           />
           <Route
+            path="/material"
+            element={<Protected Component={Materials} />}
+          />
+          <Route path="/user" element={<Protected Component={AddUsers} />} />
+
+          <Route
+            path="/student-material"
+            element={<Protected Component={StdMaterials} />}
+          />
+          <Route
+            path="/student-attendance"
+            element={<Protected Component={AttendanceStd} />}
+          />
+
+          {/* Student Routes */}
+          <Route
+            path="/student"
+            element={<Protected Component={HomeStudent} />}
+          />
+          <Route
             path="/student-announcement"
             element={<Protected Component={AnnouncementStd} />}
           />
+
+          {/* 404 Route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -155,6 +155,7 @@ const Materials = () => {
         users={"user"}
         material={"material"}
         home={"/"}
+        userRole={"cr"}
       />
       <div className="createBox">
         <div className="container">

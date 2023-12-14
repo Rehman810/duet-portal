@@ -155,6 +155,7 @@ const Announcement = () => {
         users={"user"}
         material={"material"}
         home={"/"}
+        userRole={"cr"}
       />
       <div className="cont">
         <div className="ann-cont">

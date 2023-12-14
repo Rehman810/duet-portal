@@ -111,6 +111,7 @@ const Attendance = () => {
         users={"user"}
         material={"material"}
         home={"/"}
+        userRole={"cr"}
       />
 
       <div className="att-cont">

@@ -69,10 +69,10 @@ const Login = () => {
             const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
               if (docSnapshot.exists()) {
                 const data = docSnapshot.data();
+                localStorage.setItem("role", data.role);
+                localStorage.setItem("name", data.UserName);
                 if (data.role === "student") {
                   localStorage.setItem("uid", user.uid);
-                  localStorage.setItem("role", user.role);
-                  localStorage.setItem("name", user.UserName);
                   setProgress(100);
                   setTimeout(() => {
                     navigate("/student");

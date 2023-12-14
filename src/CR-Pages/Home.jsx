@@ -75,9 +75,10 @@ const Home = () => {
       <Navbar
         attendance={"attendance"}
         announcement={"announcement"}
-        classes={"classes"}
+        home={"/"}
         users={"user"}
         material={"material"}
+        userRole={"cr"}
       />
       <div>
         <img src={Photo} alt="group-photo" className="group-photo" />

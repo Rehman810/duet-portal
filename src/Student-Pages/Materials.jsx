@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../CommonComp/Navbar";
 
-const Home = () => {
+const Materials = () => {
   return (
     <div>
       <Navbar
@@ -13,4 +13,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Materials;

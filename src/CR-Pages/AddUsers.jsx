@@ -147,7 +147,7 @@ const AddUsers = () => {
         announcement={"announcement"}
         users={"user"}
         material={"material"}
-        home={"/"}
+        home={"/"} userRole={"cr"}
       />
       <div className="createBox">
         <div className="container">
