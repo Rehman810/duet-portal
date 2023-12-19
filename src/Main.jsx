@@ -11,6 +11,7 @@ import AddUsers from "./CR-Pages/AddUsers";
 import Materials from "./CR-Pages/materials";
 import Protected from "./Protected";
 import StdMaterials from "./Student-Pages/Materials";
+import IndividualAttendance from "./CR-Pages/IndividualStdAttendance";
 import NotFound from "./NotFound";
 
 const Main = () => {
@@ -44,6 +45,10 @@ const Main = () => {
           <Route
             path="/student-attendance"
             element={<Protected Component={AttendanceStd} />}
+          />
+          <Route
+            path="ind-std-attendance"
+            element={<Protected Component={IndividualAttendance} />}
           />
 
           {/* Student Routes */}

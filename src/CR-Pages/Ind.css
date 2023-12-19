@@ -1,0 +1,23 @@
+.ind-main{
+    width: 30%;
+}
+.ind-head{
+    margin-top: 500px;
+}
+.ind{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+@media (max-width: 1100px) {
+    .ind-main{
+        width: 60%;
+    }
+}
+@media (max-width: 768px) {
+    .ind-main{
+        width: 80%;
+    }
+}

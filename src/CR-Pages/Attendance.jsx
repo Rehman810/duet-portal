@@ -51,6 +51,7 @@ const Attendance = () => {
       [studentId]: isPresent,
     }));
   };
+
   const markAttendance = async () => {
     setProgress(30);
     try {
@@ -59,26 +60,20 @@ const Attendance = () => {
         return;
       }
 
-      // Convert attendanceData to an array of { studentId, isPresent }
-      const attendanceArray = Object.entries(attendanceData).map(
-        ([studentId, isPresent]) => ({
-          studentId,
-          isPresent,
-        })
-      );
-
-      // Create a new document in the attendance collection
-      const attendanceRef = await addDoc(collection(db, "attendance"), {
-        date: todayDate,
-        serverDate: serverTimestamp(),
-        students: attendanceArray,
-        students: students.map((student) => ({
-          id: student.id,
-          UserName: student.UserName,
-          RollNumber: student.RollNo,
+      // Iterate through each student and save attendance
+      for (const student of students) {
+        const studentAttendance = {
+          date: todayDate,
+          serverDate: serverTimestamp(),
           isPresent: attendanceData[student.id] || false,
-        })),
-      });
+        };
+
+        // Save attendance record in the student's collection
+        const studentAttendanceRef = await addDoc(
+          collection(db, "student-info", student.id, "attendance"),
+          studentAttendance
+        );
+      }
 
       // Clear the form after marking attendance
       setAttendanceData({});
@@ -159,7 +154,12 @@ const Attendance = () => {
           </table>
         )}
         <div className="mark-att">
-          <Button type="primary" className="register" onClick={markAttendance}>
+          <Button
+            type="primary"
+            className="register"
+            disabled={loading}
+            onClick={markAttendance}
+          >
             Mark Attendance
           </Button>
         </div>

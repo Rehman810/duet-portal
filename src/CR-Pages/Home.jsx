@@ -9,12 +9,23 @@ import { Spin } from "antd";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import Edit from "./ExtraComponents/Std-Edit";
 import { MdOutlineDelete } from "react-icons/md";
-
+import { deleteUser as deleteAuthUser } from "firebase/auth";
+import { auth } from "../Firebase";
+import { BiSolidReport } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
+import { useStudentContext } from "../Context";
 const Home = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  const { setStudentId, setRollNo } = useStudentContext();
 
+  const navigate = useNavigate();
+  const handleReportClick = (studentId, rollNo) => {
+    setStudentId(studentId);
+    setRollNo(rollNo);
+    navigate("/ind-std-attendance");
+  };
   useEffect(() => {
     // Fetch students from Firestore
     const fetchStudents = async () => {
@@ -35,7 +46,7 @@ const Home = () => {
     fetchStudents();
   }, []);
 
-  const handleDeleteField = (id) => {
+  const handleDeleteField = (id, uid) => {
     Swal.fire({
       title: "Are you sure?",
       text: "This Announcement will be permanently deleted!",
@@ -48,9 +59,13 @@ const Home = () => {
       if (result.isConfirmed) {
         try {
           const userPostsCollectionRef = collection(db, "student-info");
-          const docRef = doc(userPostsCollectionRef, id); // Reference to the specific document
+          const docRef = doc(userPostsCollectionRef, id);
           await deleteDoc(docRef);
-          Swal.fire("Deleted!", "Announcement has been deleted.", "success");
+          const currentUser = auth.currentUser;
+          if (currentUser && currentUser.uid === uid) {
+            await deleteAuthUser(currentUser);
+          }
+          Swal.fire("Deleted!", "Student has been deleted.", "success");
           setStudents((prevPosts) =>
             prevPosts.filter((post) => post.id !== id)
           );
@@ -90,9 +105,9 @@ const Home = () => {
         ) : (
           <table className="table">
             <tr className="table-tr">
-              <th className="th">Roll Num</th>
+              <th className="th">&nbsp;&nbsp;&nbsp;Roll Num</th>
               <th className="th">Student Name</th>
-              <th className="th">Actions</th>
+              <th className="th">Actions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
             </tr>
             {students.length > 0 ? (
               students.map((student) => (
@@ -117,9 +132,17 @@ const Home = () => {
                         <MdOutlineDelete
                           size={20}
                           onClick={() => {
-                            handleDeleteField(student.id);
+                            handleDeleteField(student.id, student.uid);
                           }}
                         />
+                      </div>
+                      <div
+                        className="ind-att"
+                        onClick={() => {
+                          handleReportClick(student.uid, student.RollNo);
+                        }}
+                      >
+                        <BiSolidReport />
                       </div>
                     </div>
                   </td>

@@ -102,7 +102,7 @@
     padding: 10px;
     text-align: left;
 }
-.edit{
+.edit, .delete{
     margin-right: 5px;
 }
 .edit :hover, .delete :hover{

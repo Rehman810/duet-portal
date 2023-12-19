@@ -1,23 +1,21 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 const Protected = (props) => {
   const { Component } = props;
   const navigate = useNavigate();
   const location = useLocation();
+  // const { authToken } = useStudentContext();
 
   useEffect(() => {
     const uid = localStorage.getItem("uid");
     const role = localStorage.getItem("role");
 
-    console.log("Role:", role);
-    console.log("Pathname:", location.pathname);
-
     if (!uid) {
       navigate("/login");
     } else if (role === "cr") {
       // Handling navigation for CR (Class Representative) role
-      console.log("Navigating for CR role");
 
       // List of routes that "cr" users should not access
       const restrictedRoutes = [
@@ -28,14 +26,24 @@ const Protected = (props) => {
       ];
 
       if (restrictedRoutes.includes(location.pathname)) {
-        navigate("/"); // Redirect to another route or homepage
+        navigate("/");
         return;
       }
 
-      // Add more navigation logic for other CR routes if needed
-      // ...
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log("User is logged in");
+        } else {
+          console.log("User does not exist. Logging out.");
+          signOut(auth).then(() => {
+            localStorage.removeItem("uid");
+            localStorage.removeItem("name");
+            localStorage.removeItem("role");
+          });
+        }
+      });
     } else if (role === "student") {
-      // Handling navigation for Student role
       console.log("Navigating for Student role");
 
       // List of routes that "student" users should not access
@@ -48,14 +56,25 @@ const Protected = (props) => {
       ];
 
       if (restrictedRoutes.includes(location.pathname)) {
-        navigate("/student"); // Redirect to another route or student dashboard
+        navigate("/student");
         return;
       }
 
-      // Add more navigation logic for other student routes if needed
-      // ...
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log("User is logged in");
+        } else {
+          console.log("User does not exist. Logging out.");
+          signOut(auth).then(() => {
+            localStorage.removeItem("uid");
+            localStorage.removeItem("name");
+            localStorage.removeItem("role");
+          });
+        }
+      });
     }
-  }, []); // Empty dependencies array to run the effect only once
+  }, []);
 
   return (
     <div>

@@ -3,3 +3,6 @@
     width: 100%;
     height: 42vw;
 }
+.ind-att :hover{
+    cursor: pointer;
+}

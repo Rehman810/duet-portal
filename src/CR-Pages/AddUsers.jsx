@@ -4,10 +4,7 @@ import Swal from "sweetalert2";
 import { Input, Button } from "antd";
 import LoadingBar from "react-top-loading-bar";
 import "./AddUser.css";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../Firebase";
 import {
   serverTimestamp,
@@ -72,60 +69,60 @@ const AddUsers = () => {
   const handleSave = async () => {
     if (!crcheck.includes(rollNum) && !stdcheck.includes(rollNum)) {
       setProgress(30); // Show loading bar with 30% progress
-      return await createUserWithEmailAndPassword(auth, email, password)
-        .then((e) => {
-          onAuthStateChanged(auth, async (user) => {
-            if (user) {
-              try {
-                if (selectedOption === "student") {
-                  const userDocRef = doc(db, "student-info", e.user.uid);
-                  await setDoc(userDocRef, {
-                    UserName: name,
-                    RollNo: rollNum,
-                    email: email,
-                    role: "student",
-                    DateofRegister: serverTimestamp(),
-                  });
-                } else if (selectedOption === "cr") {
-                  const userDocRef = doc(db, "CR-info", e.user.uid);
-                  await setDoc(userDocRef, {
-                    UserName: name,
-                    RollNo: rollNum,
-                    email: email,
-                    role: "cr",
-                    DateofRegister: serverTimestamp(),
-                  });
-                }
 
-                Swal.fire({
-                  position: "top-end",
-                  icon: "success",
-                  title: "User created successfully.",
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-              } catch (e) {
-                console.error("Error adding document: ", e);
-              }
-              setProgress(100); // Show loading bar with 100% progress
-              setTimeout(() => {}, 200);
-              setEmail("");
-              setPassword("");
-              setName("");
-              setRollNum("");
-            } else {
-              console.log("user not found");
-            }
-          });
-        })
-        .catch((error) => {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+
+        if (user) {
+          if (selectedOption === "student") {
+            const userDocRef = doc(db, "student-info", user.uid);
+            await setDoc(userDocRef, {
+              UserName: name,
+              RollNo: rollNum,
+              email: email,
+              role: "student",
+              uid: auth.currentUser.uid,
+              DateofRegister: serverTimestamp(),
+            });
+          } else if (selectedOption === "cr") {
+            const userDocRef = doc(db, "CR-info", user.uid);
+            await setDoc(userDocRef, {
+              UserName: name,
+              RollNo: rollNum,
+              email: email,
+              role: "cr",
+              uid: auth.currentUser.uid,
+              DateofRegister: serverTimestamp(),
+            });
+          }
+
           Swal.fire({
-            icon: "error",
-            title: "Try Again",
-            text: "Something went wrong!",
+            position: "top-end",
+            icon: "success",
+            title: "User created successfully.",
+            showConfirmButton: false,
+            timer: 1500,
           });
-          console.log(error);
+          setProgress(100); // Show loading bar with 100% progress
+          setTimeout(() => {}, 200);
+        } else {
+          console.log("user not found");
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Try Again",
+          text: "Something went wrong!",
         });
+        setProgress(100); // Show loading bar with 100% progress
+        setTimeout(() => {}, 200);
+        console.log(error);
+      }
     } else {
       Swal.fire({
         icon: "error",
@@ -147,7 +144,8 @@ const AddUsers = () => {
         announcement={"announcement"}
         users={"user"}
         material={"material"}
-        home={"/"} userRole={"cr"}
+        home={"/"}
+        userRole={"cr"}
       />
       <div className="createBox">
         <div className="container">
