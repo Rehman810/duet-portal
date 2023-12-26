@@ -35,7 +35,6 @@ const Protected = (props) => {
         if (user) {
           console.log("User is logged in");
         } else {
-          console.log("User does not exist. Logging out.");
           signOut(auth).then(() => {
             localStorage.removeItem("uid");
             localStorage.removeItem("name");
@@ -44,8 +43,6 @@ const Protected = (props) => {
         }
       });
     } else if (role === "student") {
-      console.log("Navigating for Student role");
-
       // List of routes that "student" users should not access
       const restrictedRoutes = [
         "/attendance",
@@ -65,7 +62,6 @@ const Protected = (props) => {
         if (user) {
           console.log("User is logged in");
         } else {
-          console.log("User does not exist. Logging out.");
           signOut(auth).then(() => {
             localStorage.removeItem("uid");
             localStorage.removeItem("name");

@@ -36,8 +36,13 @@ const Main = () => {
             path="/material"
             element={<Protected Component={Materials} />}
           />
+          <Route
+            path="ind-std-attendance"
+            element={<Protected Component={IndividualAttendance} />}
+          />
           <Route path="/user" element={<Protected Component={AddUsers} />} />
 
+          {/* Student Routes */}
           <Route
             path="/student-material"
             element={<Protected Component={StdMaterials} />}
@@ -46,12 +51,7 @@ const Main = () => {
             path="/student-attendance"
             element={<Protected Component={AttendanceStd} />}
           />
-          <Route
-            path="ind-std-attendance"
-            element={<Protected Component={IndividualAttendance} />}
-          />
 
-          {/* Student Routes */}
           <Route
             path="/student"
             element={<Protected Component={HomeStudent} />}

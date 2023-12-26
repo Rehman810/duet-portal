@@ -49,7 +49,7 @@ const Home = () => {
   const handleDeleteField = (id, uid) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This Announcement will be permanently deleted!",
+      text: "This User will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

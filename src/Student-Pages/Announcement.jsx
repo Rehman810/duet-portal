@@ -49,6 +49,7 @@ const Announcement = () => {
         attendance={"student-attendance"}
         announcement={"student-announcement"}
         home={"/student"}
+        material={"student-material"}
       />
       <div className="cont">
         <div className="ann-cont">
